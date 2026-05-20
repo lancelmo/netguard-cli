@@ -1,6 +1,6 @@
 # NetGuard Cyber Defense Network Engine v1.2
 
-Este projeto é uma ferramenta de auditoria de segurança e monitoramento de ativos de rede local em linha de comando (CLI), desenvolvida como projeto prático para a disciplina de **Engenharia de Software**. 
+Este projeto é uma ferramenta de auditoria de segurança e monitoramento de ativos de rede local em linha de comando (CLI), desenvolvida como projeto prático para a disciplina de **Projeto 1 - Engenharia de Software**. 
 
 O sistema realiza varreduras ativas na rede, identifica serviços expostos coletando assinaturas de servidores (Banner Grabbing) e correlaciona as vulnerabilidades encontradas diretamente com a matriz global **MITRE ATT&CK v14** e o comportamento do **Nikto Spider**.
 
