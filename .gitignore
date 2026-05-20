@@ -1,0 +1,11 @@
+# Ignorar ambiente virtual local
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Ignorar relatórios gerados nos testes locais
+*.json
+
+# Ignorar pastas de configuração do VS Code
+.vscode/
