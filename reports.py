@@ -122,7 +122,7 @@ class ReportManager:
         for dev in devices:
             dados = dev.to_dict()
             
-            # Se o vendor veio genérico ou nulo, tenta resolver com a nossa tabela OUI robusta
+            # Se o vendor veio genérico ou nulo, tenta resolver com a nossa tabela OUI
             if dados.get('vendor') == "Desconhecido" or not dados.get('vendor'):
                 dados['vendor'] = self._identificar_fabricante_local(dados.get('mac'))
             

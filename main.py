@@ -41,7 +41,7 @@ class NetGuardController:
             border_style="red"
         ))
         
-        # Criação de um menu em formato de tabela (Visual Avançado)
+        # Criação de um menu em formato de tabela
         menu_table = Table(show_header=True, header_style="bold blue", border_style="dim")
         menu_table.add_column("Cód", style="yellow", justify="center")
         menu_table.add_column("Módulo Operacional", style="bold white")

@@ -4,7 +4,7 @@ import sys
 class SnifferModule:
     def __init__(self):
         self.keep_sniffing = True
-        # Base de dados educacional para identificação de hardware (OUI/Vendor)
+        # Base de dados para identificação de hardware (OUI/Vendor)
         # Base de dados expandida com OUIs reais do mercado global
         # Base de dados expandida com OUIs reais das maiores fabricantes do mercado
         self.vendor_prefixes = {
@@ -113,13 +113,13 @@ class SnifferModule:
             # Altera o visual do log se detectar tráfego inseguro
             status_tag = "[ALERT]" if "INSEGURO" in seguro else "[TRAFFIC]"
             print(f"{status_tag} {src_ip} -> {dst_ip} | Proc: {protocolo} | Status: {seguro} | Origem: {fabricante} ({tipo_hardware})")
-            sys.stdout.flush() # Força o terminal a cuspir o texto imediatamente
+            sys.stdout.flush() # Força o terminal a entregar o texto rápido
 
     def run_live_sniff(self):
         """Roda o sniffer capturando todo o tráfego até o usuário pressionar CTRL+C."""
         self.keep_sniffing = True
         try:
-            # Filtro removido para capturar IP genérico (HTTP, HTTPS, DNS, etc.)
+            # Sem filtro, para capturar IP genérico (HTTP, HTTPS, DNS, etc.)
             sniff(
                 filter="ip", 
                 prn=self.analyze_packet, 
