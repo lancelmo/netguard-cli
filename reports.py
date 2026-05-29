@@ -4,12 +4,70 @@ from datetime import datetime
 class ReportManager:
     def __init__(self, export_path="auditoria_cyber_intelligence.json"):
         self.export_path = export_path
+        
+        # Base de dados idêntica e centralizada para resolução local de OUI no JSON
+        self.vendor_prefixes = {
+            # DELL
+            "00:14:22": ("Dell Inc.", "Notebook/Desktop/Server"),
+            "d4:be:d9": ("Dell Inc.", "Notebook/Desktop"),
+            "1c:72:1d": ("Dell Inc.", "Notebook/Desktop"),
+            "00:21:70": ("Dell Inc.", "Notebook"),
+
+            # APPLE (iPhones, MacBooks, Mac, Roteadores em tethering)
+            "00:17:f2": ("Apple, Inc.", "MacBook/iPhone"),
+            "8c:85:90": ("Apple, Inc.", "iPhone/iPad/AppleWatch"),
+            "f4:f1:5a": ("Apple, Inc.", "MacBook/iMac"),
+            "b4:18:d1": ("Apple, Inc.", "iPhone/iPad"),
+            "9a:60:ca": ("Apple, Inc.", "iPhone Hotspot / Apple Device"),
+
+            # SAMSUNG
+            "2c:98:11": ("Samsung Electronics", "Mobile/SmartTV"),
+            "1c:5a:3e": ("Samsung Electronics", "SmartTV"),
+            "bc:72:b1": ("Samsung Electronics", "Mobile/Galaxy"),
+            "94:8b:c1": ("Samsung Electronics", "Mobile/Galaxy"),
+
+            # XIAOMI / MI
+            "1c:99:4c": ("Xiaomi Communications", "Mobile/POCO/Redmi"),
+            "50:ec:50": ("Xiaomi Communications", "Mobile/POCO/Redmi"),
+            "64:cc:2e": ("Xiaomi Communications", "Mobile/SmartDevices"),
+            "d4:61:9d": ("Xiaomi Communications", "Mobile/POCO/Redmi"),
+
+            # MOTOROLA / LENOVO
+            "00:15:a8": ("Motorola Mobility", "Mobile/Moto"),
+            "a4:70:d6": ("Motorola Mobility", "Mobile/Moto"),
+            "60:be:b5": ("Motorola Mobility", "Mobile/Moto"),
+            "00:50:56": ("Lenovo", "Notebook/ThinkPad"),
+
+            # ACER
+            "00:1e:68": ("Acer Inc.", "Notebook/Desktop"),
+            "c0:38:96": ("Acer Inc.", "Notebook/Aspire"),
+
+            # PLACAS DE REDE GENÉRICAS
+            "30:9c:23": ("Intel Corporate", "Wi-Fi/Ethernet Card"),
+            "a4:4b:d5": ("Intel Corporate", "Intel Wi-Fi 6"),
+            "00:e0:4c": ("Realtek Semiconductor", "Ethernet Adapter"),
+            "b8:27:eb": ("Raspberry Pi Foundation", "IoT/Microcomputador"),
+
+            # ROTEADORES / INFRAESTRUTURA
+            "50:c7:bf": ("TP-Link", "Router/Wi-Fi Extender"),
+            "00:17:88": ("Philips Hue", "Smart Home IoT Hub"),
+            "bc:a5:11": ("Cisco Systems", "Network Switch/Router")
+        }
+
+    def _identificar_fabricante_local(self, mac_address):
+        """Busca o OUI localmente para o relatório caso o DTO venha vazio ou Desconhecido."""
+        if not mac_address or mac_address == "Desconhecido":
+            return "Desconhecido"
+        
+        mac_limpo = mac_address.lower().replace("-", ":")
+        prefixo = ":".join(mac_limpo.split(":")[:3])
+        
+        fabricante, _ = self.vendor_prefixes.get(prefixo, ("Desconhecido", ""))
+        return fabricante
 
     def _obter_dica_seguranca(self, porta, banner_detectado=""):
         """Mapeamento avançado com correlação de vulnerabilidades estilo Nikto Spider e MITRE ATT&CK."""
-        
-        # Limpa o banner para facilitar a exibição
-        banner_str = banner_detectado if banner_detectado else "Desconhecido"
+        banner_str = banner_detectado if banner_detectado else "Serviço Ativo (Banner Oculto)"
         
         mitre_mapping = {
             21: {
@@ -64,7 +122,14 @@ class ReportManager:
         for dev in devices:
             dados = dev.to_dict()
             
+            # Se o vendor veio genérico ou nulo, tenta resolver com a nossa tabela OUI robusta
+            if dados.get('vendor') == "Desconhecido" or not dados.get('vendor'):
+                dados['vendor'] = self._identificar_fabricante_local(dados.get('mac'))
+            
             if dados['open_ports']:
+                # MUDANÇA TÉCNICA: Se tem porta aberta expondo serviços vulneráveis, vira True!
+                dados['is_vulnerable'] = True
+                
                 analise = []
                 portas_limpas = []
                 
@@ -73,11 +138,10 @@ class ReportManager:
                     banner = item_porta["banner_detectado"]
                     portas_limpas.append(p)
                     
-                    # Passamos o banner detectado para enriquecer a dica de segurança dinamicamente
                     inteligencia_mitre = self._obter_dica_seguranca(p, banner)
                     analise.append({
                         "porta_analisada": p,
-                        "banner_coletado": banner,
+                        "banner_coletado": banner if banner else "Serviço Ativo (Banner Oculto)",
                         "analise_heuristica_vulnerabilidade": inteligencia_mitre
                     })
                 
@@ -85,6 +149,7 @@ class ReportManager:
                 dados['analise_de_risco_automatizada'] = analise
                 dispositivos_com_portas_abertas_e_possiveis_falhas.append(dados)
             else:
+                dados['is_vulnerable'] = False
                 dispositivos_seguros.append(dados)
 
         conteudo_final = {

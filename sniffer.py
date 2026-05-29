@@ -5,14 +5,54 @@ class SnifferModule:
     def __init__(self):
         self.keep_sniffing = True
         # Base de dados educacional para identificação de hardware (OUI/Vendor)
+        # Base de dados expandida com OUIs reais do mercado global
+        # Base de dados expandida com OUIs reais das maiores fabricantes do mercado
         self.vendor_prefixes = {
-            "8c:85:90": ("Apple", "Mobile/Desktop"),
-            "2c:98:11": ("Samsung", "Mobile/SmartTV"),
-            "9a:60:ca": ("Router/Gateway", "Network Device"),
-            "30:9c:23": ("Intel", "Notebook/Desktop"),
-            "74:da:da": ("Asustek", "Notebook/Desktop"),
-            "d4:a0:2a": ("LG Electronics", "SmartTV/Mobile"),
-            "00:11:32": ("Synology", "NAS Server/Storage")
+            # DELL
+            "00:14:22": ("Dell Inc.", "Notebook/Desktop/Server"),
+            "d4:be:d9": ("Dell Inc.", "Notebook/Desktop"),
+            "1c:72:1d": ("Dell Inc.", "Notebook/Desktop"),
+            "00:21:70": ("Dell Inc.", "Notebook"),
+
+            # APPLE (iPhones, MacBooks, iPads)
+            "00:17:f2": ("Apple, Inc.", "MacBook/iPhone"),
+            "8c:85:90": ("Apple, Inc.", "iPhone/iPad/AppleWatch"),
+            "f4:f1:5a": ("Apple, Inc.", "MacBook/iMac"),
+            "b4:18:d1": ("Apple, Inc.", "iPhone/iPad"),
+
+            # SAMSUNG
+            "2c:98:11": ("Samsung Electronics", "Mobile/SmartTV"),
+            "1c:5a:3e": ("Samsung Electronics", "SmartTV"),
+            "bc:72:b1": ("Samsung Electronics", "Mobile/Galaxy"),
+            "94:8b:c1": ("Samsung Electronics", "Mobile/Galaxy"),
+
+            # XIAOMI / MI
+            "1c:99:4c": ("Xiaomi Communications", "Mobile/POCO/Redmi"),
+            "50:ec:50": ("Xiaomi Communications", "Mobile/POCO/Redmi"),
+            "64:cc:2e": ("Xiaomi Communications", "Mobile/SmartDevices"),
+            "d4:61:9d": ("Xiaomi Communications", "Mobile/POCO/Redmi"),
+
+            # MOTOROLA / LENOVO
+            "00:15:a8": ("Motorola Mobility", "Mobile/Moto"),
+            "a4:70:d6": ("Motorola Mobility", "Mobile/Moto"),
+            "60:be:b5": ("Motorola Mobility", "Mobile/Moto"),
+            "00:50:56": ("Lenovo", "Notebook/ThinkPad"),
+
+            # ACER
+            "00:1e:68": ("Acer Inc.", "Notebook/Desktop"),
+            "c0:38:96": ("Acer Inc.", "Notebook/Aspire"),
+
+            # PLACAS DE REDE GENÉRICAS (Muitas vezes embutidas em Dell, Acer e HP)
+            "30:9c:23": ("Intel Corporate", "Wi-Fi/Ethernet Card"),
+            "a4:4b:d5": ("Intel Corporate", "Intel Wi-Fi 6"),
+            "00:e0:4c": ("Realtek Semiconductor", "Ethernet Adapter"),
+            "b8:27:eb": ("Raspberry Pi Foundation", "IoT/Microcomputador"),
+
+            # ROTEADORES / INFRAESTRUTURA
+            "50:c7:bf": ("TP-Link", "Router/Wi-Fi Extender"),
+            "00:17:88": ("Philips Hue", "Smart Home IoT Hub"),
+            "bc:a5:11": ("Cisco Systems", "Network Switch/Router"),
+            "9a:60:ca": ("Router/Gateway", "Network Device Generico")
         }
 
     def _identificar_dispositivo(self, mac_address):
@@ -20,8 +60,12 @@ class SnifferModule:
         if not mac_address:
             return "Desconhecido", "Desconhecido"
         
+        # Padroniza para minúsculas e substitui hífens por dois pontos se houver
+        mac_limpo = mac_address.lower().replace("-", ":")
+        
         # Pega os 3 primeiros bytes do MAC (ex: 2c:98:11)
-        prefixo = ":".join(mac_address.lower().split(":")[:3])
+        prefixo = ":".join(mac_limpo.split(":")[:3])
+        
         return self.vendor_prefixes.get(prefixo, ("Desconhecido", "Dispositivo Genérico"))
 
     def analyze_packet(self, packet):
