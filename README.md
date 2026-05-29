@@ -6,7 +6,7 @@ O sistema realiza varreduras ativas na rede, identifica serviços expostos colet
 
 ---
 
-## 🛠️ Tecnologias e Pré-requisitos
+##  Tecnologias e Pré-requisitos
 
 Para que o projeto funcione corretamente, foi necessária a instalação e configuração dos seguintes componentes na máquina de desenvolvimento:
 
@@ -17,7 +17,7 @@ Para que o projeto funcione corretamente, foi necessária a instalação e confi
 
 ---
 
-## 📦 Bibliotecas Utilizadas (Dependências)
+##  Bibliotecas Utilizadas (Dependências)
 
 O projeto foi construído utilizando o conceito de ambiente virtual isolado (`venv`) e depende das seguintes bibliotecas de terceiros:
 
@@ -26,7 +26,7 @@ O projeto foi construído utilizando o conceito de ambiente virtual isolado (`ve
 
 ---
 
-## 🚀 Como Instalar e Executar (Guia para a Equipe)
+## Como Instalar e Executar (Guia para a Equipe)
 
 Siga os passos abaixo para clonar o repositório, configurar o ambiente e testar a aplicação na sua máquina local:
 
@@ -55,12 +55,12 @@ Bash
 pip install scapy rich
 
 4. Executar a Aplicação
-⚠️ IMPORTANTE (Requisito de Segurança): Como o software realiza escuta de tráfego na rede (Sniffing) e manipula pacotes brutos, o terminal do seu VS Code ou Prompt de Comando DEVE ser executado como Administrador.
+IMPORTANTE (Requisito de Segurança): Como o software realiza escuta de tráfego na rede (Sniffing) e manipula pacotes brutos, o terminal do seu VS Code ou Prompt de Comando DEVE ser executado como Administrador.
 
 Bash
 python main.py
 
-📋 Arquitetura de Módulos Operacionais
+Arquitetura de Módulos Operacionais
 
 main.py: Controlador central da interface (NetGuardController). Gerencia o fluxo do menu e a persistência em memória.
 
@@ -71,3 +71,13 @@ sniffer.py: Módulo de monitoramento contínuo (SnifferModule). Captura o tráfe
 reports.py: Gerenciador de relatórios (ReportManager). Classifica os dados e exporta uma auditoria em JSON integrada com inteligência contra ameaças baseada no Framework MITRE ATT&CK (RF05).
 
 models.py: Contém o DTO (DeviceDTO) estruturado para transferência limpa de dados entre módulos.
+
+###  Guia de Testes das Funcionalidades (Interface CLI)
+
+Ao iniciar a aplicação como Administrador, o operador terá acesso a um menu interativo com as seguintes opções para validação dos Requisitos Funcionais (RF):
+
+* **Opção 1 - Reconhecimento de Ativos (Scan ARP):** Realiza uma varredura veloz baseada em pacotes ARP ocultos para mapear os IPs e MACs ativos na rede local.
+* **Opção 2 - Varredura de Portas e Banner Grabbing:** Executa um Port Scan direcionado nos alvos descobertos, extraindo assinaturas de serviços (estilo Nikto Spider) nas portas críticas de rede (21, 22, 80, 443, 445, 3306).
+* **Opção 3 - Exportar Auditoria Threat Intelligence (JSON):** Consolida todos os dados em memória e gera o arquivo `auditoria_cyber_intelligence.json` na raiz do projeto, contendo a análise heurística de risco cruzada com a matriz global **MITRE ATT&CK v14**.
+* **Opção 4 - Monitoramento de Tráfego ao Vivo (Sniffer):** Coloca a placa de rede em Modo Promíscuo para capturar e classificar pacotes IP em tempo real na tela, apontando tráfego seguro (criptografado) ou gerando alertas (`[ALERT]`) para protocolos em texto claro.
+* **Opção 5 - Sair:** Encerra a execução do motor com segurança.
