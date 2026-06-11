@@ -84,7 +84,7 @@ source venv/bin/activate
 pip install scapy rich
 ```
 
-5. ***Executar a Aplicação***
+5. **Executar a Aplicação**
 
 ⚠️ IMPORTANTE (Requisito de Segurança): Como o software realiza escuta de tráfego na rede (Sniffing) e manipula pacotes brutos, o interpretador Python DEVE ser executado com privilégios de Administrador.
 
