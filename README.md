@@ -117,7 +117,7 @@ sudo ./venv/bin/python main.py
 
 ---
 
-*** Guia de Testes das Funcionalidades (Interface CLI)***
+***Guia de Testes das Funcionalidades (Interface CLI)***
 
 Ao iniciar a aplicação como Administrador, o operador terá acesso a um menu interativo com as seguintes opções para validação dos Requisitos Funcionais (RF):
 
