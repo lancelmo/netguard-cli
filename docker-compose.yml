@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  netguard:
+    build: .
+    image: netguard-cli:v1.0
+    container_name: netguard_container
+    # Compartilha a placa de rede física do seu PC com o contêiner
+    network_mode: "host"
+    # Dá permissão de Administrador (Root) para o contêiner fazer o Sniffer e varredura ARP
+    privileged: true
+    stdin_open: true 
+    tty: true        
+    volumes:
+      - .:/app
