@@ -44,70 +44,86 @@ sudo docker-compose up --build
 
 Caso o ambiente hospedeiro apresente restrições de baixo nível ou falhas no Daemon do Docker (comum em distribuições baseadas em Arch Linux devido a drivers de armazenamento ou módulos de Kernel), utilize o fluxo nativo:
 
-1. Clonar o Repositório
-Bash
-git clone [https://github.com/lancelmo/NetGuard-CLI.git](https://github.com/lancelmo/NetGuard-CLI.git)
-cd NetGuard-CLI
-2. Instalar Dependências do Sistema (Apenas se estiver no Linux)
-No Linux, o Python precisa da biblioteca nativa de captura de pacotes instalada no sistema operacional.
+1. **Clonar o Repositório**:
+* Bash
+* git clone [https://github.com/lancelmo/NetGuard-CLI.git](https://github.com/lancelmo/NetGuard-CLI.git)
+* cd NetGuard-CLI
 
-No Arch Linux / Manjaro: sudo pacman -S libpcap --noconfirm
+2. **Instalar Dependências do Sistema (Apenas se estiver no Linux)**
 
-No Ubuntu / Debian: sudo apt update && sudo apt install libpcap-dev -y
+* No Linux, o Python precisa da biblioteca nativa de captura de pacotes instalada no sistema operacional.
 
-3. Criar e Ativar o Ambiente Virtual (venv)
-No Windows (PowerShell):
+* No Arch Linux / Manjaro: sudo pacman -S libpcap --noconfirm
+
+* No Ubuntu / Debian: sudo apt update && sudo apt install libpcap-dev -y
+
+3. **Criar e Ativar o Ambiente Virtual (venv)**
+* No Windows (PowerShell):
 
 PowerShell
+
 python -m venv venv
+
 .\venv\Scripts\activate
-No Linux (Terminal/Zsh):
 
-Bash
+* No Linux (Terminal/Zsh):
+
+```Bash
+
 python -m venv venv
-source venv/bin/activate
-4. Instalar as Dependências do Python
-Bash
-pip install scapy rich
-5. Executar a Aplicação
 
----
+source venv/bin/activate
+```
+
+4. **Instalar as Dependências do Python**
+```Bash
+
+pip install scapy rich
+```
+
+5. ***Executar a Aplicação***
 
 ⚠️ IMPORTANTE (Requisito de Segurança): Como o software realiza escuta de tráfego na rede (Sniffing) e manipula pacotes brutos, o interpretador Python DEVE ser executado com privilégios de Administrador.
 
 No Windows: Abra o Prompt/PowerShell como Administrador e rode:
 
-PowerShell
+```PowerShell
+
 python main.py
+```
+
 No Linux (Execução via Root da venv):
 
-Bash
+```Bash
 sudo ./venv/bin/python main.py
+```
 
 ---
 
-🏗️ Arquitetura de Módulos Operacionais
-main.py: Controlador central da interface (NetGuardController). Gerencia o fluxo do menu e a persistência em memória.
+ ***Arquitetura de Módulos Operacionais***
 
-scanner.py: Motor de varredura (ScannerEngine). Responsável pelo Reconhecimento ARP (RF01) e pelo Port Scanning com Banner Grabbing no estilo Nikto (RF02).
+* main.py: Controlador central da interface (NetGuardController). Gerencia o fluxo do menu e a persistência em memória.
 
-sniffer.py: Módulo de monitoramento contínuo (SnifferModule). Captura o tráfego IP de forma promíscua, identificando fabricantes via endereço MAC e classificando a segurança dos protocolos em tempo real (RF03/RF04).
+* scanner.py: Motor de varredura (ScannerEngine). Responsável pelo Reconhecimento ARP (RF01) e pelo Port Scanning com Banner Grabbing no estilo Nikto (RF02).
 
-reports.py: Gerenciador de relatórios (ReportManager). Classifica os dados e exporta uma auditoria em JSON integrada com inteligência contra ameaças baseada no Framework MITRE ATT&CK (RF05).
+* sniffer.py: Módulo de monitoramento contínuo (SnifferModule). Captura o tráfego IP de forma promíscua, identificando fabricantes via endereço MAC e classificando a segurança dos protocolos em tempo real (RF03/RF04).
 
-models.py: Contém o DTO (DeviceDTO) estruturado para transferência limpa de dados entre módulos.
+* reports.py: Gerenciador de relatórios (ReportManager). Classifica os dados e exporta uma auditoria em JSON integrada com inteligência contra ameaças baseada no Framework MITRE ATT&CK (RF05).
+
+* models.py: Contém o DTO (DeviceDTO) estruturado para transferência limpa de dados entre módulos.
 
 ---
 
-💎 Guia de Testes das Funcionalidades (Interface CLI)
+*** Guia de Testes das Funcionalidades (Interface CLI)***
+
 Ao iniciar a aplicação como Administrador, o operador terá acesso a um menu interativo com as seguintes opções para validação dos Requisitos Funcionais (RF):
 
-Opção 1 - Reconhecimento de Ativos (Scan ARP): Realiza uma varredura veloz baseada em pacotes ARP ocultos para mapear os IPs e MACs ativos na rede local.
+* Opção 1 - Reconhecimento de Ativos (Scan ARP): Realiza uma varredura veloz baseada em pacotes ARP ocultos para mapear os IPs e MACs ativos na rede local.
 
-Opção 2 - Varredura de Portas e Banner Grabbing: Executa um Port Scan direcionado nos alvos descobertos, extraindo assinaturas de serviços (estilo Nikto Spider) nas portas críticas de rede (21, 22, 80, 443, 445, 3306).
+* Opção 2 - Varredura de Portas e Banner Grabbing: Executa um Port Scan direcionado nos alvos descobertos, extraindo assinaturas de serviços (estilo Nikto Spider) nas portas críticas de rede (21, 22, 80, 443, 445, 3306).
 
-Opção 3 - Exportar Auditoria Threat Intelligence (JSON): Consolida todos os dados em memória e gera o arquivo auditoria_cyber_intelligence.json na raiz do projeto, contendo a análise heurística de risco cruzada com a matriz global MITRE ATT&CK v14.
+* Opção 3 - Exportar Auditoria Threat Intelligence (JSON): Consolida todos os dados em memória e gera o arquivo auditoria_cyber_intelligence.json na raiz do projeto, contendo a análise heurística de risco cruzada com a matriz global MITRE ATT&CK v14.
 
-Opção 4 - Monitoramento de Tráfego ao Vivo (Sniffer): Coloca a placa de rede em Modo Promíscuo para capturar e classificar pacotes IP em tempo real na tela, apontando tráfego seguro (criptografado) ou gerando alertas ([ALERT]) para protocolos em texto claro.
+* Opção 4 - Monitoramento de Tráfego ao Vivo (Sniffer): Coloca a placa de rede em Modo Promíscuo para capturar e classificar pacotes IP em tempo real na tela, apontando tráfego seguro (criptografado) ou gerando alertas ([ALERT]) para protocolos em texto claro.
 
-Opção 5 ou 0 - Sair: Encerra a execução do motor com segurança.
+* Opção 5 ou 0 - Sair: Encerra a execução do motor com segurança.
