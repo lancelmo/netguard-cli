@@ -37,7 +37,11 @@ O projeto possui suporte nativo a contêineres com acoplamento direto à interfa
 Para buildar a imagem e disparar a aplicação, execute na raiz do projeto:
 ```bash
 sudo docker-compose up --build
-Opção 2: Execução Nativa (Windows / Linux)
+```
+---
+
+### Opção 2: Execução Nativa (Windows / Linux)
+
 Caso o ambiente hospedeiro apresente restrições de baixo nível ou falhas no Daemon do Docker (comum em distribuições baseadas em Arch Linux devido a drivers de armazenamento ou módulos de Kernel), utilize o fluxo nativo:
 
 1. Clonar o Repositório
@@ -67,6 +71,8 @@ Bash
 pip install scapy rich
 5. Executar a Aplicação
 
+---
+
 ⚠️ IMPORTANTE (Requisito de Segurança): Como o software realiza escuta de tráfego na rede (Sniffing) e manipula pacotes brutos, o interpretador Python DEVE ser executado com privilégios de Administrador.
 
 No Windows: Abra o Prompt/PowerShell como Administrador e rode:
@@ -77,6 +83,7 @@ No Linux (Execução via Root da venv):
 
 Bash
 sudo ./venv/bin/python main.py
+---
 🏗️ Arquitetura de Módulos Operacionais
 main.py: Controlador central da interface (NetGuardController). Gerencia o fluxo do menu e a persistência em memória.
 
@@ -87,6 +94,8 @@ sniffer.py: Módulo de monitoramento contínuo (SnifferModule). Captura o tráfe
 reports.py: Gerenciador de relatórios (ReportManager). Classifica os dados e exporta uma auditoria em JSON integrada com inteligência contra ameaças baseada no Framework MITRE ATT&CK (RF05).
 
 models.py: Contém o DTO (DeviceDTO) estruturado para transferência limpa de dados entre módulos.
+
+---
 
 💎 Guia de Testes das Funcionalidades (Interface CLI)
 Ao iniciar a aplicação como Administrador, o operador terá acesso a um menu interativo com as seguintes opções para validação dos Requisitos Funcionais (RF):
