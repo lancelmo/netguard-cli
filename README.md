@@ -45,9 +45,11 @@ sudo docker-compose up --build
 Caso o ambiente hospedeiro apresente restrições de baixo nível ou falhas no Daemon do Docker (comum em distribuições baseadas em Arch Linux devido a drivers de armazenamento ou módulos de Kernel), utilize o fluxo nativo:
 
 1. **Clonar o Repositório**:
-* Bash
-* git clone [https://github.com/lancelmo/NetGuard-CLI.git](https://github.com/lancelmo/NetGuard-CLI.git)
-* cd NetGuard-CLI
+```Bash
+git clone [https://github.com/lancelmo/NetGuard-CLI.git](https://github.com/lancelmo/NetGuard-CLI.git)
+
+cd NetGuard-CLI
+```
 
 2. **Instalar Dependências do Sistema (Apenas se estiver no Linux)**
 
@@ -60,11 +62,12 @@ Caso o ambiente hospedeiro apresente restrições de baixo nível ou falhas no D
 3. **Criar e Ativar o Ambiente Virtual (venv)**
 * No Windows (PowerShell):
 
-PowerShell
+```PowerShell
 
 python -m venv venv
 
 .\venv\Scripts\activate
+```
 
 * No Linux (Terminal/Zsh):
 
