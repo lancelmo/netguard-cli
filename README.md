@@ -37,6 +37,7 @@ O projeto possui suporte nativo a contêineres com acoplamento direto à interfa
 Para buildar a imagem e disparar a aplicação, execute na raiz do projeto:
 ```bash
 sudo docker-compose up --build
+```
 Opção 2: Execução Nativa (Windows / Linux)
 Caso o ambiente hospedeiro apresente restrições de baixo nível ou falhas no Daemon do Docker (comum em distribuições baseadas em Arch Linux devido a drivers de armazenamento ou módulos de Kernel), utilize o fluxo nativo:
 
